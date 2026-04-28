@@ -1,8 +1,8 @@
 import { useState } from "react";
 import heroStage from "@/assets/hero-stage.jpg";
-import { avatars } from "@/components/erasmus/avatars";
+import { avatars, Avatar } from "@/components/erasmus/avatars";
 import { AvatarPicker } from "@/components/erasmus/AvatarPicker";
-import { AvatarChat } from "@/components/erasmus/AvatarChat";
+import { AvatarChatDialog } from "@/components/erasmus/AvatarChatDialog";
 
 const stats = [
   { value: "150+", label: "Students" },
@@ -31,7 +31,13 @@ const pillars = [
 ];
 
 const Index = () => {
-  const [selected, setSelected] = useState(avatars[0]);
+  const [selected, setSelected] = useState<Avatar>(avatars[0]);
+  const [chatOpen, setChatOpen] = useState(false);
+
+  const pickAvatar = (a: Avatar) => {
+    setSelected(a);
+    setChatOpen(true);
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -119,17 +125,24 @@ const Index = () => {
             </h2>
             <p className="font-body text-xl text-muted-foreground max-w-2xl mx-auto">
               Six voices from the programme — each carrying their own culture, craft, and curiosity.
-              Pick one, and ask whatever you'd like to know.
+              Tap one to open a private conversation — they'll speak back, too.
             </p>
           </div>
 
-          <div className="mb-10">
-            <AvatarPicker selected={selected} onSelect={setSelected} />
+          <div className="mb-6">
+            <AvatarPicker selected={selected} onSelect={pickAvatar} />
           </div>
-
-          <AvatarChat avatar={selected} />
+          <p className="text-center font-sans-ui text-xs uppercase tracking-widest text-muted-foreground">
+            Click any guide to begin
+          </p>
         </div>
       </section>
+
+      <AvatarChatDialog
+        avatar={selected}
+        open={chatOpen}
+        onOpenChange={setChatOpen}
+      />
 
       {/* PROGRAMME PILLARS */}
       <section id="programme" className="py-20 md:py-28 bg-background">
